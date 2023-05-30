@@ -16,9 +16,9 @@ int wmain(int argc, const wchar_t* argv[])
 	}
 
 	ComBridgeLoader ccLoader;
-	if (!ccLoader.InitLoader())
+	if (!ccLoader)
 	{
-		wprintf(L"InitLoader() error.\n");
+		wprintf(L"ComBridgeLoader Init error.\n");
 		return 0;
 	}
 

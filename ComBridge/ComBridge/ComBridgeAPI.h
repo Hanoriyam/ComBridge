@@ -14,4 +14,6 @@ extern "C"
 	COMBRIDGE_API void fnBlockBridge();
 	COMBRIDGE_API void fnSetSerialBufferSize(DWORD dwSize);
 	COMBRIDGE_API BOOL fnRegisterCallback(BRIDGE_CALLBACK_FUNC func);
+	COMBRIDGE_API void fnShowLog();
+	COMBRIDGE_API void fnHideLog();
 }

@@ -17,12 +17,21 @@ ComBridgeLoader::ComBridgeLoader()
 	m_BlockBridge = nullptr;
 	m_SetSerialBufferSize = nullptr;
 	m_RegisterCallback = nullptr;
+	m_ShowLog = nullptr;
+	m_HideLog = nullptr;
+
+	m_bInit = InitLoader();
 }
 
 ComBridgeLoader::~ComBridgeLoader()
 {
 	if (m_hDll) FreeLibrary(m_hDll);
 	m_hDll = nullptr;
+}
+
+ComBridgeLoader::operator bool() const
+{
+	return m_bInit;
 }
 
 BOOL ComBridgeLoader::InitLoader()
@@ -51,6 +60,8 @@ BOOL ComBridgeLoader::InitLoader()
 	m_BlockBridge = reinterpret_cast<fnBlockBridge>(GetProcAddress(m_hDll, "fnBlockBridge"));
 	m_SetSerialBufferSize = reinterpret_cast<fnSetSerialBufferSize>(GetProcAddress(m_hDll, "fnSetSerialBufferSize"));
 	m_RegisterCallback = reinterpret_cast<fnRegisterCallback>(GetProcAddress(m_hDll, "fnRegisterCallback"));
+	m_ShowLog = reinterpret_cast<fnShowLog>(GetProcAddress(m_hDll, "fnShowLog"));
+	m_HideLog = reinterpret_cast<fnHideLog>(GetProcAddress(m_hDll, "fnHideLog"));
 
 	if (nullptr == m_InitBridge ||
 		nullptr == m_StartBridge ||
@@ -58,13 +69,15 @@ BOOL ComBridgeLoader::InitLoader()
 		nullptr == m_AllowBridge ||
 		nullptr == m_BlockBridge ||
 		nullptr == m_SetSerialBufferSize ||
-		nullptr == m_RegisterCallback)
+		nullptr == m_RegisterCallback ||
+		nullptr == m_ShowLog ||
+		nullptr == m_HideLog)
 	{
 		return FALSE;
 	}
 
 	return TRUE;
-}
+	}
 
 BOOL ComBridgeLoader::InitBridge(LPCWSTR pwReadPort, LPCWSTR pwWritePort, DWORD dwBaudRate, BYTE bByteSize)
 {
@@ -133,5 +146,25 @@ BOOL ComBridgeLoader::RegisterCallback(BRIDGE_CALLBACK_FUNC func)
 		return FALSE;
 	}
 
-	m_RegisterCallback(func);
+	return m_RegisterCallback(func);	
+}
+
+void ComBridgeLoader::ShowLog()
+{
+	if (nullptr == m_hDll)
+	{
+		return;
+	}
+
+	m_ShowLog();
+}
+
+void ComBridgeLoader::HideLog()
+{
+	if (nullptr == m_hDll)
+	{
+		return;
+	}
+
+	m_HideLog();
 }

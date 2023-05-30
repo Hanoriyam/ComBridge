@@ -38,3 +38,13 @@ BOOL fnRegisterCallback(BRIDGE_CALLBACK_FUNC func)
 {
 	return g_cc.RegisterCallback(func);
 }
+
+void fnShowLog()
+{
+	LogMgr::SetShow();
+}
+
+void fnHideLog()
+{
+	LogMgr::SetHide();
+}
