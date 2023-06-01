@@ -15,28 +15,30 @@ int wmain(int argc, const wchar_t* argv[])
 		return 0;
 	}
 
-	ComBridgeLoader ccLoader;
-	if (!ccLoader)
+	;
+	if (ComBridgeLoader ccLoader; ccLoader)
+	{
+		if (!ccLoader.InitBridge(__wargv[1], __wargv[2], _wtoi(__wargv[3]), _wtoi(__wargv[4])))
+		{
+			wprintf(L"Init() error.\n");
+			return 0;
+		}
+
+		if (!ccLoader.RegisterCallback(&DataCallback))
+		{
+			wprintf(L"RegisterCallback() error.\n");
+			return 0;
+		}
+
+		if (!ccLoader.StartBridge())
+		{
+			wprintf(L"StartBridge() error.\n");
+			return 0;
+		}
+	}
+	else
 	{
 		wprintf(L"ComBridgeLoader Init error.\n");
-		return 0;
-	}
-
-	if (!ccLoader.InitBridge(__wargv[1], __wargv[2], _wtoi(__wargv[3]), _wtoi(__wargv[4])))
-	{
-		wprintf(L"Init() error.\n");
-		return 0;
-	}
-
-	if (!ccLoader.RegisterCallback(&DataCallback))
-	{
-		wprintf(L"RegisterCallback() error.\n");
-		return 0;
-	}
-
-	if (!ccLoader.StartBridge())
-	{
-		wprintf(L"StartBridge() error.\n");
 		return 0;
 	}
 
